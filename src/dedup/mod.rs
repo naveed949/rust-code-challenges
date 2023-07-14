@@ -5,7 +5,7 @@
 /// # Examples
 ///
 /// ```
-/// use rust_code_challenges::deduplication::dedup;
+/// use rust_code_challenges::dedup::dedup;
 ///
 /// let input = vec![1, 2, 2, 3, 3, 3, 4, 4, 5];
 /// let expected_output = vec![1, 2, 3, 4, 5];
@@ -38,7 +38,7 @@ pub fn dedup(a: Vec<i32>) -> Vec<i32> {
 /// # Examples
 ///
 /// ```
-/// use rust_code_challenges::deduplication::dedup_preserve_order;
+/// use rust_code_challenges::dedup::dedup_preserve_order;
 ///
 /// let input = vec![1, 2, 2, 5, 3, 3, 3, 4, 4, 6, 7, 7];
 /// let expected_output = vec![1, 2, 5, 3, 4, 6, 7];

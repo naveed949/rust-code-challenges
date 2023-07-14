@@ -25,7 +25,7 @@ assert_eq!(actual_output, expected_output);
 The `dedup` module contains two function to remove duplicates from a vector of integers.
 
 1. `dedup` - Removes duplicates from a vector of integers.
-2. `dedup_preserve_order` - Removes duplicates from a vector of integers while preserving the order of the remaining elements.
+2. `dedup_preserve_order` - Removes duplicates from a vector of Generic Type while preserving the order of the remaining elements.
 
 ```rust
 use rust_code_challenges::dedup::dedup;
