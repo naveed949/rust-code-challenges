@@ -24,6 +24,14 @@ assert_eq!(actual_output, expected_output);
 ```
 ## Dedup Preserve Order
 The `dedup_preserve_order` module contains a function to remove duplicates from a vector of integers while preserving the order of the remaining elements.
+```rust
+use rust_code_challenges::dedup_preserve_order::dedup_preserve_order;
+
+let input = vec![1, 2, 2, 4, 3, 3, 3, 4, 4, 7, 7, 5];
+let expected_output = vec![1, 2, 4, 3, 7, 5];
+let actual_output = dedup_preserve_order(&input);
+assert_eq!(actual_output, expected_output);
+```
 
 # Contributing
 Contributions to this repository are welcome! If you have a code challenge you'd like to see implemented in Rust, feel free to open an issue or submit a pull request.
