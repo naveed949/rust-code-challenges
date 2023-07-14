@@ -1,2 +1,2 @@
 pub mod median;
-pub mod deduplication;
+pub mod dedup;
