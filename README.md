@@ -4,6 +4,9 @@ This repository contains solutions to various Rust code challenges. Each challen
 
 ## Challenges
 
+- [Median](#median)
+- [Dedup](#dedup)
+
 ### Median
 
 The `median` module contains a function to calculate the median of a vector of floating-point numbers.
