@@ -3,25 +3,6 @@ pub fn info<T>(a: &T) where T: std::fmt::Debug{
     println!("{:?}",a);
 }
 
-fn main() {
-    let a = "?";
-    let b = "?".to_string();
-    info(&a);
-    info(&b);
-
-    // Advanced 1
-    // use std::ffi::CString;
-    
-    // let c = CString::new("?").unwrap();
-    // info(&input);
-
-    // Advanced 2
-    // use std::path::Path;
-    // let d = Path::new("/tmp/linkedin-learning");
-    // info(d);
-}
-
-
 #[test]
 fn str() {
     let input = "Rust";

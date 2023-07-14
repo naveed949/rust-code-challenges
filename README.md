@@ -6,6 +6,7 @@ This repository contains solutions to various Rust code challenges. Each challen
 
 - [Median](#median)
 - [Dedup](#dedup)
+- [Print](#print)
 
 ### Median
 
