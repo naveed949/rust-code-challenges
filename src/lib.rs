@@ -6,3 +6,5 @@ pub mod insensitive_sort;
 pub mod morse_code;
 /// This module provides game BlackJack hand cards value calculation and determination of losing hand.
 pub mod hand_cards_value;
+/// This module provides functionality related to Event and its deadline.
+pub mod deadline_passed;
