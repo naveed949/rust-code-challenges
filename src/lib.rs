@@ -8,3 +8,5 @@ pub mod morse_code;
 pub mod hand_cards_value;
 /// This module provides functionality related to Event and its deadline.
 pub mod deadline_passed;
+/// This module provides functionality for conversion between celsius and fahrenheit.
+pub mod temprature;
