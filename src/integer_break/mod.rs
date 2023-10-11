@@ -59,14 +59,6 @@ mod Solution343_Tests {
         assert_eq!(actual, expected);
     }
 
-    // #[test]
-    // fn example4() {
-    //     let n = 58;
-    //     let expected: i32 = 3 ^ 189 * 2;
-    //     let actual = Solution343::integer_break(n);
-    //     assert_eq!(actual, expected);
-    // }
-
     #[test]
     fn example5() {
         let n = 4;

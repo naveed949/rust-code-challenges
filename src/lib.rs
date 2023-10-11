@@ -1,6 +1,7 @@
 /// This module provides functionality related to Event and its deadline.
 pub mod deadline_passed;
 pub mod dedup;
+pub mod flowers_bloom;
 /// This module provides game BlackJack hand cards value calculation and determination of losing hand.
 pub mod hand_cards_value;
 pub mod insensitive_sort;
