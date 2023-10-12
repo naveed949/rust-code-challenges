@@ -8,19 +8,38 @@ struct FlowersBloom;
 
 impl FlowersBloom {
     pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
-        let mut flowers_bloom = vec![0; people.len()];
+        let mut flowers_bloom = Vec::new();
         // prepare data for binary search
         let mut flowers = flowers;
         flowers.sort_by(|a, b| a[0].cmp(&b[0]));
-        flowers.binary_search_by(|x| x[0].cmp(&people[0]));
-        for i in 0..people.len() {
-            for j in 0..flowers.len() {
-                if flowers[j][0] <= people[i] && flowers[j][1] >= people[i] {
-                    flowers_bloom[i] += 1;
+        let mut count = 0;
+        let mut start: usize = 0;
+        for p in people {
+            start = FlowersBloom::start_index(&flowers, p);
+            println!("start: {}", start);
+            count = 0;
+            for f in start..flowers.len() {
+                if flowers[f][0] > p {
+                    break;
+                } else if flowers[f][1] >= p {
+                    count += 1;
                 }
             }
+            flowers_bloom.push(count);
         }
         flowers_bloom
+    }
+
+    fn start_index(flowers: &Vec<Vec<i32>>, p: i32) -> usize {
+        let mut end = flowers.len();
+        let mut mid = end / 3;
+        if flowers[mid][0] > p {
+            return 0;
+        } else if flowers[mid * 2][0] > p {
+            return mid;
+        } else {
+            return mid * 2;
+        }
     }
 }
 
