@@ -1,10 +1,10 @@
-workspace = { members = ["cli-fruit-salad"] }
 [package]
-name = "rust-code-challenges"
+name = "cli-fruit-salad"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = "0.4.26"
+clap = "2.33.3"
+rand = "0.8.4"
