@@ -1,30 +1,24 @@
 use cli_fruit_salad::create_fruit_salad;
-use std::env;
+use clap::{App, Arg};
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let matches = App::new("cli-fruit-salad")
+        .version("1.0")
+        .author("Naveed")
+        .about("Creates a fruit salad")
+        .arg(
+            Arg::with_name("number")
+                .help("The number of fruits to include in the fruit salad")
+                .required(true)
+                .index(1),
+        )
+        .get_matches();
 
-    if args.len() == 1 || args.contains(&String::from("-h")) || args.contains(&String::from("--help")) {
-        println!("Usage: cli-fruit-salad [OPTIONS] <number>");
-        println!();
-        println!("Options:");
-        println!("  -h, --help     Show help information");
-        println!();
-        println!("Arguments:");
-        println!("  <number>       The number of fruits to include in the fruit salad");
-        return;
-    }
-
-    let number: u32 = match args[1].parse() {
-        Ok(n) => n,
-        Err(_) => {
-            println!("Invalid number provided");
-            return;
-        }
-    };
+    let number: u32 = matches.value_of("number").unwrap().parse().unwrap();
     println!("Creating a fruit salad with {} fruits", number);
     let salad = create_fruit_salad(number);
-    match salad {
-        Some(fruit) => println!("Fruit salad: {}", fruit),
-        None => println!("Invalid number provided"),
+    if let Some(fruit) = salad {
+        println!("salad > {}", fruit);
+    } else {
+        println!("Invalid number provided");
     }
 }
