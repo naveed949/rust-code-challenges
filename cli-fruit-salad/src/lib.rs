@@ -39,6 +39,14 @@ pub fn create_fruit_salad_with_linkedlist(mut number: u32) -> Option<String> {
     fruit.push_back("strawberry");
     fruit.push_back("watermelon");
 
+    // add tomato between banana and orange
+    let mut split = fruit.split_off(2);
+    fruit.push_back("avocado");
+
+    fruit.append(&mut split);
+
+
+
     if number > 0 && number <= fruit.len() as u32 {
         let mut salad: Vec<String> = Vec::new();
         let mut rng = rand::thread_rng();
@@ -195,6 +203,22 @@ mod tests {
             let fruit = fruit.split(", ").collect::<Vec<&str>>();
             assert!(fruit.len() == 3);
         }
+    }
+
+    #[test]
+    fn test_create_fruit_salad_with_linkedlist_with_avocado() {
+        let mut fruit: LinkedList<&str> = LinkedList::new();
+
+        fruit.push_front("apple");
+        fruit.push_front("banana");
+        fruit.push_front("orange");
+
+        let mut split = fruit.split_off(1);
+        split.push_front("avocado");
+        fruit.append(&mut split);
+
+        let result = fruit.iter().map(|f| f.to_string()).collect::<Vec<String>>().join(", ");
+        assert_eq!(result, "orange, avocado, banana, apple");
     }
     
 }
