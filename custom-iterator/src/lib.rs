@@ -8,6 +8,14 @@ pub struct Fibonacci {
     next: u32,
 }
 
+impl Fibonacci {
+     pub fn new() -> Fibonacci {
+         Fibonacci {
+             current: 0,
+             next: 1,
+         }
+     }
+}
 impl Iterator for Fibonacci {
     type Item = u32;
 
