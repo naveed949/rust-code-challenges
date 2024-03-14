@@ -83,3 +83,9 @@ mod tests {
         assert!((sum - 1.0).abs() < 1e-6);
     }
 }
+
+/**
+ * The PageRank algorithm is a link analysis algorithm that assigns a numerical weighting to each element of a hyperlinked set of documents, such as the World Wide Web, with the purpose of "measuring" its relative importance within the set. The algorithm may be applied to any collection of entities with reciprocal quotations and references. The numerical weight that it assigns to any given element E is referred to as the PageRank of E and denoted by PR(E).
+ * Usecase:
+ * Relationship and closenes measure between people in a social network or realworld.
+ */
