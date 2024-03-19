@@ -29,6 +29,7 @@ fn main() {
         let cpu_usage = system.global_cpu_info().cpu_usage();
         let total_memory = system.total_memory() / 1024;
         let used_memory = system.used_memory() / 1024;
+        // TODO: disk, network, and process monitoring
         // Remove the first element if the vectors are too large
         if cpu_usages.len() >= max_size {
             cpu_usages.remove(0);
