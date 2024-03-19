@@ -9,6 +9,9 @@ fn main() {
     println!("{:?}", iris_df.head(Some(5)));
     println!("{:?}", iris_df.tail(Some(5)));
     println!("{:?}", iris_df.describe(None));
+    println!("{:?}", iris_df.dtypes());
+    println!("{:?}", iris_df.column("Species"));
+    println!("{:?}", iris_df.column("Species").unwrap().n_unique());
     
 }
 
