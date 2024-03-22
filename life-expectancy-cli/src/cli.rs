@@ -33,4 +33,3 @@ pub enum Commands {
 pub fn parse_args() -> Cli {
     Cli::parse()
 }
-
