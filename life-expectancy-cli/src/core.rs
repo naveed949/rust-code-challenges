@@ -1,7 +1,10 @@
-use polars::prelude::*;
 
-pub fn fetch_data(path: &str) -> DataFrame {
-    CsvReader::from_path(path).unwrap().finish().unwrap()
+use polars::prelude::*;
+use polars::datatypes::DataType;
+
+pub fn fetch_data(path: &str, indicator: &str) -> Result<DataFrame> {
+    let lf = LazyFrame::scan_csv(path, CsvReadOptions::new().has_header(true), None)?
+        .filter(col(indicator).eq(lit(indicator)));
 }
 
 pub fn calculate_life_expectancy(data: &DataFrame, country: &str, year: u32) -> f64 {
