@@ -1,4 +1,4 @@
-workspace = { members = [ "binary_heap_example", "candle-demo","cli-fruit-salad", "cli-system-monitor", "csv-reader", "custom-iterator", "frequency-counter", "google-pagerank", "hash_set", "iris-data-analysis", "life-expectancy-cli", "lru-cache"] }
+workspace = { members = [ "binary_heap_example", "candle-demo","cli-fruit-salad", "cli-system-monitor", "csv-reader", "custom-iterator", "frequency-counter", "google-pagerank", "hash_set", "iris-data-analysis", "life-expectancy-cli", "lru-cache", "stateful-web-request"] }
 [package]
 name = "rust-code-challenges"
 version = "0.1.0"
