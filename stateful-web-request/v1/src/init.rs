@@ -1,7 +1,7 @@
 pub struct Initial;
 
 impl Initial {
-    pub fn initialise_services() {
+    pub fn initialize_services() {
         println!("Initialising services...");
     }
 

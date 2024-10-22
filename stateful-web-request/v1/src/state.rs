@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug)]
 pub enum State {
     Init,
     Routing,
@@ -7,6 +7,9 @@ pub enum State {
 }
 
 impl State {
+    pub fn new() -> State {
+        State::Init
+    }
     pub fn next(&self) -> State {
         match self {
             State::Init => State::Routing,
@@ -15,4 +18,5 @@ impl State {
             State::Send => State::Init,
         }
     }
+    
 }
