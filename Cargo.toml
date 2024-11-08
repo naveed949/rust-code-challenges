@@ -13,7 +13,8 @@ workspace = { members = [
     "lru-cache",
     "stateful-web-request",
     "stateful-web-request/v1",
-    "stateful-web-request/v2"
+    "stateful-web-request/v2",
+    "stateful-web-request/v3"
 ]}
 [package]
 name = "rust-code-challenges"
