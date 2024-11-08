@@ -11,7 +11,7 @@ build:
 	$(CARGO) build
 
 run:
-	$(CARGO) run
+	$(CARGO) fmt && $(CARGO)  run
 
 test:
 	$(CARGO) test
@@ -21,7 +21,7 @@ clean:
 
 # Command to keep server reloading upon save
 watch:
-	cargo watch -q -c -w src/ -x 'fmt' -x 'run'
+	cargo watch -q -c -w src/ -x 'fmt'
 
 # Command to auto reformat the code
 fmt:

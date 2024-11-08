@@ -1,7 +1,7 @@
 use std::io::{BufRead, BufReader, Read};
 use std::net::TcpStream;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Request {
     method: String,
     path: String,
