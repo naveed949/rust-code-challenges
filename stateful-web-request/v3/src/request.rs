@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::io::{BufRead, BufReader, Read};
 use std::net::TcpStream;
 
@@ -5,55 +6,43 @@ use std::net::TcpStream;
 pub struct Request {
     method: String,
     path: String,
-    version: String,
-    headers: Vec<(String, String)>,
-    body: Option<String>,
+    headers: HashMap<String, String>,
+    body: String,
 }
 
 impl Request {
-    pub fn new() -> Self {
-        Request {
-            method: String::new(),
-            path: String::new(),
-            version: String::new(),
-            headers: Vec::new(),
-            body: None,
-        }
-    }
-
-    pub fn from_stream(stream: &mut TcpStream) -> Result<Self, std::io::Error> {
-        let mut reader = BufReader::new(stream);
+    pub fn from_stream(stream: &TcpStream) -> Self {
+        let mut buf_reader = BufReader::new(stream);
         let mut request_line = String::new();
-        reader.read_line(&mut request_line)?;
+        buf_reader.read_line(&mut request_line).unwrap();
 
-        let mut parts = request_line.split_whitespace();
-        let method = parts.next().unwrap_or("").to_string();
-        let path = parts.next().unwrap_or("").to_string();
-        let version = parts.next().unwrap_or("").to_string();
-
-        let mut headers = Vec::new();
+        let mut headers = HashMap::new();
         let mut line = String::new();
-        while reader.read_line(&mut line)? > 0 {
+        while buf_reader.read_line(&mut line).unwrap() > 0 {
             if line == "\r\n" {
                 break;
             }
-            let mut header_parts = line.splitn(2, ':');
-            let key = header_parts.next().unwrap_or("").trim().to_string();
-            let value = header_parts.next().unwrap_or("").trim().to_string();
-            headers.push((key, value));
+            let parts: Vec<&str> = line.split(": ").collect();
+            headers.insert(parts[0].to_string(), parts[1].trim().to_string());
             line.clear();
         }
 
-        let mut body = String::new();
-        reader.read_to_string(&mut body)?;
+        let content_length = headers
+            .get("Content-Length")
+            .and_then(|cl| cl.parse::<usize>().ok())
+            .unwrap_or(0);
 
-        Ok(Request {
-            method,
-            path,
-            version,
+        let mut body = vec![0; content_length];
+        buf_reader.read_exact(&mut body).unwrap();
+        let body = String::from_utf8(body).unwrap();
+
+        let parts: Vec<&str> = request_line.split_whitespace().collect();
+        Self {
+            method: parts[0].to_string(),
+            path: parts[1].to_string(),
             headers,
-            body: if body.is_empty() { None } else { Some(body) },
-        })
+            body,
+        }
     }
 
     pub fn method(&self) -> &str {
@@ -64,15 +53,11 @@ impl Request {
         &self.path
     }
 
-    pub fn version(&self) -> &str {
-        &self.version
+    pub fn body(&self) -> &str {
+        &self.body
     }
 
-    pub fn headers(&self) -> &[(String, String)] {
+    pub fn headers(&self) -> &HashMap<String, String> {
         &self.headers
-    }
-
-    pub fn body(&self) -> Option<&str> {
-        self.body.as_deref()
     }
 }

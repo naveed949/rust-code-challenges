@@ -88,21 +88,11 @@ fn main() {
         let tx = tx.clone();
         web_server_pool.execute(move || {
             let req = Request::from_stream(&mut stream);
-            match req {
-                Ok(req) => {
-                    tx.send(State::Init(Initialize::new(req.clone())))
-                        .unwrap_or_else(|e| {
-                            panic!("Error: {}", e);
-                        });
-                }
-                Err(e) => {
-                    let err_state = State::Error(format!("Error: {}", e));
-                    tx.send(err_state).unwrap_or_else(|e| {
-                        panic!("Error: {}", e);
-                    });
-                }
-            }
 
+            tx.send(State::Init(Initialize::new(req.clone())))
+                .unwrap_or_else(|e| {
+                    panic!("Error: {}", e);
+                });
             handle_connection(stream);
         });
     }
