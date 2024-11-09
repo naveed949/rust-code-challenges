@@ -39,35 +39,36 @@ fn main() {
         println!("State machine running...");
         loop {
             // infinite loop to keep the state machine running
-            let state = rx.recv().unwrap_or_else(|e| {
+            let mut req: Request = rx.recv().unwrap_or_else(|e| {
                 State::Error(format!("Error: {}", e));
                 panic!("Error: {}", e);
             });
             state_machine_pool.execute(move || {
                 // worker thread <2> of the state machine per message received
-                println!("State: {:?}", state);
-                let mut state = state;
+                // println!("State: {:?}", req.state());
                 loop {
+                    let state = req.state();
                     match state {
                         State::Init(init) => {
                             init.initialize_services();
                             init.configs_loaded();
                             init.clients_connected();
-                            state = init.next();
+                            req.next_state();
                         }
                         State::Routing(routing) => {
                             routing.url_parse();
                             routing.route_match();
                             routing.middleware_execute();
-                            state = routing.next();
+                            req.next_state();
                         }
                         State::Dispatch(dispatch) => {
                             dispatch.controller_execute();
                             dispatch.prepare_response();
-                            state = dispatch.next();
+                            req.next_state();
                         }
                         State::Send(send) => {
-                            send.send_response();
+                            let response = "HTTP/1.1 200 OK\r\n\r\nHello, World!";
+                            send.send_response(&mut req, response);
                             send.connection_close();
                             // send.next();
                             break;
@@ -87,13 +88,11 @@ fn main() {
         let mut stream = stream.unwrap();
         let tx = tx.clone();
         web_server_pool.execute(move || {
-            let req = Request::from_stream(&mut stream);
+            let req = Request::from_stream(stream);
 
-            tx.send(State::Init(Initialize::new(req.clone())))
-                .unwrap_or_else(|e| {
-                    panic!("Error: {}", e);
-                });
-            handle_connection(stream);
+            tx.send(req).unwrap_or_else(|e| {
+                panic!("Error: {}", e);
+            });
         });
     }
 }

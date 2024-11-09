@@ -3,7 +3,7 @@ use crate::init::Initialize;
 use crate::routing::Routing;
 use crate::send::Send;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum State {
     Init(Initialize),
     Routing(Routing),

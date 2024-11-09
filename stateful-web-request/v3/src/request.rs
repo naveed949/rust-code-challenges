@@ -1,18 +1,26 @@
 use std::collections::HashMap;
-use std::io::{BufRead, BufReader, Read};
+use std::io::{BufRead, BufReader, Read, Write};
 use std::net::TcpStream;
 
-#[derive(Debug, PartialEq, Clone)]
+use crate::dispatch::Dispatch;
+use crate::init::Initialize;
+use crate::routing::Routing;
+use crate::send::Send;
+use crate::state::State;
+
+#[derive(Debug)]
 pub struct Request {
     method: String,
     path: String,
     headers: HashMap<String, String>,
     body: String,
+    stream: TcpStream,
+    state: State,
 }
 
 impl Request {
-    pub fn from_stream(stream: &TcpStream) -> Self {
-        let mut buf_reader = BufReader::new(stream);
+    pub fn from_stream(mut stream: TcpStream) -> Self {
+        let mut buf_reader = BufReader::new(&stream);
         let mut request_line = String::new();
         buf_reader.read_line(&mut request_line).unwrap();
 
@@ -42,6 +50,8 @@ impl Request {
             path: parts[1].to_string(),
             headers,
             body,
+            stream,
+            state: State::Init(Initialize::new()),
         }
     }
 
@@ -59,5 +69,28 @@ impl Request {
 
     pub fn headers(&self) -> &HashMap<String, String> {
         &self.headers
+    }
+    pub fn send_response(&mut self, _response: &str) {
+        // let response = "HTTP/1.1 200 OK\r\n\r\nHello, World!";
+        self.stream.write_all(_response.as_bytes()).unwrap();
+        self.stream.flush().unwrap();
+    }
+    pub fn state(&self) -> State {
+        self.state.clone()
+    }
+    pub fn next_state(&mut self) {
+        match self.state {
+            State::Init(_) => {
+                self.state = State::Routing(Routing);
+            }
+            State::Routing(_) => {
+                self.state = State::Dispatch(Dispatch);
+            }
+            State::Dispatch(_) => {
+                self.state = State::Send(Send);
+            }
+            State::Send(_) => {}
+            State::Error(_) => {}
+        }
     }
 }

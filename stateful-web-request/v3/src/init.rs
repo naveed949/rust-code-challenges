@@ -1,14 +1,12 @@
-use crate::{request::Request, routing::Routing, state::State};
+use crate::{routing::Routing, state::State};
 
 // Initialises the services, loads the configs and notifies when clients are connected.
-#[derive(Debug, PartialEq)]
-pub struct Initialize {
-    request: Request,
-}
+#[derive(Debug, PartialEq, Clone)]
+pub struct Initialize;
 
 impl Initialize {
-    pub fn new(req: Request) -> Initialize {
-        Initialize { request: req }
+    pub fn new() -> Initialize {
+        Initialize
     }
     pub fn initialize_services(&self) {
         println!("Initialising services...");
@@ -22,7 +20,7 @@ impl Initialize {
         println!("Configs loaded.");
     }
 
-    pub fn next(&self) -> State {
-        State::Routing(Routing::from_init(self.request.clone()))
+    pub fn next(&self) -> &State {
+        &State::Routing(Routing)
     }
 }

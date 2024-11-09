@@ -1,13 +1,11 @@
 use crate::{dispatch::Dispatch, request::Request, state::State};
 
-#[derive(Debug, PartialEq)]
-pub struct Routing {
-    request: Request,
-}
+#[derive(Debug, PartialEq, Clone)]
+pub struct Routing;
 
 impl Routing {
     pub fn from_init(request: Request) -> Routing {
-        Routing { request }
+        Routing
     }
     pub fn url_parse(&self) {
         println!("URL parsed.");
@@ -18,7 +16,7 @@ impl Routing {
     pub fn middleware_execute(&self) {
         println!("Middleware executed.");
     }
-    pub fn next(&self) -> State {
-        State::Dispatch(Dispatch::from_routing(self.request.clone()))
+    pub fn next(&self) -> &State {
+        &State::Dispatch(Dispatch)
     }
 }
