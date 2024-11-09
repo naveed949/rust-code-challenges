@@ -19,7 +19,7 @@ pub struct Request {
 }
 
 impl Request {
-    pub fn from_stream(mut stream: TcpStream) -> Self {
+    pub fn from_stream(stream: TcpStream) -> Self {
         let mut buf_reader = BufReader::new(&stream);
         let mut request_line = String::new();
         buf_reader.read_line(&mut request_line).unwrap();
