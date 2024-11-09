@@ -93,4 +93,31 @@ impl Request {
             State::Error(_) => {}
         }
     }
+
+    pub fn path_params(&self) -> HashMap<String, String> {
+        let parts: Vec<&str> = self.path.split('/').collect();
+        let mut params = HashMap::new();
+        let mut i = 0;
+        for part in parts.clone() {
+            if part.starts_with(':') {
+                params.insert(part[1..].to_string(), parts[i + 1].to_string().clone());
+            }
+            i += 1;
+        }
+        params
+    }
+
+    pub fn query_params(&self) -> HashMap<String, String> {
+        let parts: Vec<&str> = self.path.split('?').collect();
+        let mut params = HashMap::new();
+        if parts.len() > 1 {
+            let query = parts[1];
+            let pairs: Vec<&str> = query.split('&').collect();
+            for pair in pairs {
+                let kv: Vec<&str> = pair.split('=').collect();
+                params.insert(kv[0].to_string(), kv[1].to_string());
+            }
+        }
+        params
+    }
 }
