@@ -6,24 +6,12 @@ mod state;
 
 mod request;
 
-use dispatch::Dispatch;
-use init::Initialize;
 use request::Request;
-use routing::Routing;
-use send::Send;
 use state::State;
 
-use std::io::prelude::*;
-use std::net::{TcpListener, TcpStream};
+use std::net::TcpListener;
 use std::sync::mpsc;
 use threadpool::ThreadPool;
-
-// TODO: Implement it in Send state
-fn handle_connection(mut stream: TcpStream) {
-    let response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, world!";
-    stream.write_all(response.as_bytes()).unwrap();
-    stream.flush().unwrap();
-}
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -85,7 +73,7 @@ fn main() {
 
     // main thread <0> of the web server to accept incoming connections
     for stream in listener.incoming() {
-        let mut stream = stream.unwrap();
+        let stream = stream.unwrap();
         let tx = tx.clone();
         web_server_pool.execute(move || {
             let req = Request::from_stream(stream);
