@@ -48,6 +48,9 @@ fn main() -> Result<(), Box<dyn Error>> {
             State::Done => {
                 break;
             }
+            State::Error(ref msg) => {
+                return Err(msg.clone().into());
+            }
         }
         state = state.next(); 
     }

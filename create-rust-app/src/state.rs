@@ -8,6 +8,7 @@ pub enum State {
     Customization,
     Finalization,
     Done,
+    Error(String),
 }
 
 impl State {
@@ -21,6 +22,7 @@ impl State {
             State::Customization => State::Finalization,
             State::Finalization => State::Done,
             State::Done => State::Done,
+            State::Error(_) => State::Done,
         }
     }
 }
