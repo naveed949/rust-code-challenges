@@ -14,8 +14,9 @@ workspace = { members = [
     "stateful-web-request",
     "stateful-web-request/v1",
     "stateful-web-request/v2",
-    "stateful-web-request/v3"
-]}
+    "stateful-web-request/v3",
+    "stateful-web-request/v4",
+] }
 [package]
 name = "rust-code-challenges"
 version = "0.1.0"
