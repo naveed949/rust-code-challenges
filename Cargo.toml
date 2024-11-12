@@ -3,6 +3,7 @@ workspace = { members = [
     "candle-demo",
     "cli-fruit-salad",
     "cli-system-monitor",
+    "create-rust-app",
     "csv-reader",
     "custom-iterator",
     "frequency-counter",
