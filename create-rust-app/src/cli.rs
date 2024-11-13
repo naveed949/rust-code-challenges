@@ -4,7 +4,7 @@ use structopt::StructOpt;
 pub struct Cli {
     #[structopt(long)]
     name: String,
-    #[structopt(long, default_value = "bin")]
+    #[structopt(long, default_value = "cli")]
     project_type: String,
     #[structopt(long, default_value = "MIT")]
     license: String,
@@ -45,4 +45,28 @@ impl Cli {
             _ => None,
         }
     }
+}
+
+pub fn parse_args() -> Cli {
+    Cli::from_args()
+}
+
+pub enum ProjectType {
+    Cli,
+    Web,
+    Desktop,
+}
+
+impl std::str::FromStr for ProjectType {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "cli" => Ok(ProjectType::Cli),
+            "web" => Ok(ProjectType::Web),
+            "desktop" => Ok(ProjectType::Desktop),
+            _ => Err(format!("Invalid project type: {}", s)),
+        }
+    }
+    
 }

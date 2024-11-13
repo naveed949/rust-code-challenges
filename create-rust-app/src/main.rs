@@ -1,9 +1,10 @@
 use structopt::StructOpt;
 use log::{info, error};
 use std::error::Error;
+use std::str::FromStr;
 
 use create_rust_app::{create_project, create_directories, create_config_files, add_dependencies};
-use create_rust_app::{cli::Cli, state::State};
+use create_rust_app::{cli::{Cli, ProjectType}, state::State};
 
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
@@ -15,7 +16,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             State::Initialization => {
                 if let Err(e) = create_project(
                     &args.get("name").unwrap(),
-                    args.get("project_type").unwrap_or(&String::from("bin")),
+                    &String::from("bin"),
                 ) {
                     error!("Failed to create project: {}", e);
                     state = State::Error(e.to_string());
@@ -48,7 +49,22 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             State::CodeTemplates => {
                 // Add code template generation logic here
-                state = State::Customization;
+                ProjectType::from_str(args.get("project_type").unwrap())
+                    .map(|project_type| match project_type {
+                        ProjectType::Cli => {
+                            // Add CLI code template generation logic here
+                        }
+                        ProjectType::Web => {
+                            // Add web code template generation logic here
+                        }
+                        ProjectType::Desktop => {
+                            // Add desktop code template generation logic here
+                        }
+                    })
+                    .unwrap_or_else(|e| {
+                        error!("Failed to generate code templates: {}", e);
+                        state = State::Error(e.to_string());
+                    });
             }
             State::Customization => {
                 // Add customization logic here

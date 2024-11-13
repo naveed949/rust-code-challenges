@@ -1,6 +1,7 @@
 pub mod cli;
 pub mod state;
 pub mod templates;
+pub mod writer;
 
 use std::fs;
 use std::process::Command;
