@@ -15,8 +15,8 @@ impl<T> Writer<T> {
     }
 }
 
-impl Write<ProjectType> for Writer<ProjectType> {
-    fn write_main_rs(&self, data: &str) -> Result<(), Error> {
+impl Write for Writer<ProjectType> {
+   fn write_main_rs(&self, data: &str) -> Result<(), Error> {
         match self.project_type {
             ProjectType::Cli => {
                 // Write main.rs for CLI project

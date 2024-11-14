@@ -1,3 +1,5 @@
+use create_rust_app::templates::write::Write;
+use create_rust_app::writer::Writer;
 use structopt::StructOpt;
 use log::{info, error};
 use std::error::Error;
@@ -50,21 +52,40 @@ fn main() -> Result<(), Box<dyn Error>> {
             State::CodeTemplates => {
                 // Add code template generation logic here
                 ProjectType::from_str(args.get("project_type").unwrap())
-                    .map(|project_type| match project_type {
-                        ProjectType::Cli => {
-                            // Add CLI code template generation logic here
+                    .map(|project_type| -> Result<(), Box<dyn Error>> {
+                        match project_type {
+                            ProjectType::Cli => {
+                                // Add CLI code template generation logic here
+                                let writer = Writer::new(ProjectType::Cli);
+                                writer.write_main_rs("")?;
+                                writer.write_mod_rs("")?;
+                                writer.write_utils_rs("")?;
+                                writer.write_error_rs("")?;
+                            }
+                            ProjectType::Web => {
+                                // Add web code template generation logic here
+                                let writer = Writer::new(ProjectType::Web);
+                                writer.write_main_rs("")?;
+                                writer.write_mod_rs("")?;
+                                writer.write_utils_rs("")?;
+                                writer.write_error_rs("")?;
+                            }
+                            ProjectType::Desktop => {
+                                // Add desktop code template generation logic here
+                                let writer = Writer::new(ProjectType::Desktop);
+                                writer.write_main_rs("")?;
+                                writer.write_mod_rs("")?;
+                                writer.write_utils_rs("")?;
+                                writer.write_error_rs("")?;
+                            }
                         }
-                        ProjectType::Web => {
-                            // Add web code template generation logic here
-                        }
-                        ProjectType::Desktop => {
-                            // Add desktop code template generation logic here
-                        }
+                        Ok(())
                     })
                     .unwrap_or_else(|e| {
                         error!("Failed to generate code templates: {}", e);
                         state = State::Error(e.to_string());
-                    });
+                        Ok(())
+                    })?;
             }
             State::Customization => {
                 // Add customization logic here
