@@ -1,5 +1,7 @@
 {
     "rust-analyzer.linkedProjects": [
         "./Cargo.toml"
-    ]
+    ],
+    "githubPullRequests.experimental.chat": true,
+    "githubPullRequests.experimental.notificationsView": true
 }
