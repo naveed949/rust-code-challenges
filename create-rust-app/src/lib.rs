@@ -39,8 +39,17 @@ pub fn create_config_files(name: &str, license: &str) -> Result<(), Box<dyn Erro
 pub fn add_dependencies(name: &str, dependencies: Option<&str>, dev_dependencies: Option<&str>) -> Result<(), Box<dyn Error>> {
     info!("Adding dependencies to project: {}", name);
     let mut cargo_toml = fs::read_to_string(format!("{}/Cargo.toml", name))?;
+    let common_deps = r#"
+    log = "0.4"
+    clap = "2.33"
+    thiserror = "1.0"
+    anyhow = "1.0"
+    "#;
+
+    // Add common dependencies
+    cargo_toml.push_str(&format!("{}", common_deps));
     if let Some(deps) = dependencies {
-        cargo_toml.push_str(&format!("\n[dependencies]\n{}", deps.replace(",", "\n")));
+        cargo_toml.push_str(&format!("{}", deps.replace(",", "\n")));
     }
     if let Some(dev_deps) = dev_dependencies {
         cargo_toml.push_str(&format!("\n[dev-dependencies]\n{}", dev_deps.replace(",", "\n")));

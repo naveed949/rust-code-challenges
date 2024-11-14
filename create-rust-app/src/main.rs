@@ -1,25 +1,25 @@
 use create_rust_app::templates::write::Write;
 use create_rust_app::writer::Writer;
-use structopt::StructOpt;
-use log::{info, error};
+use log::{error, info};
 use std::error::Error;
 use std::str::FromStr;
+use structopt::StructOpt;
 
-use create_rust_app::{create_project, create_directories, create_config_files, add_dependencies};
-use create_rust_app::{cli::{Cli, ProjectType}, state::State};
+use create_rust_app::{add_dependencies, create_config_files, create_directories, create_project};
+use create_rust_app::{
+    cli::{Cli, ProjectType},
+    state::State,
+};
 
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
     let mut state = State::Initialization;
     let args = Cli::from_args();
-    
+
     loop {
         match state {
             State::Initialization => {
-                if let Err(e) = create_project(
-                    &args.get("name").unwrap(),
-                    &String::from("bin"),
-                ) {
+                if let Err(e) = create_project(&args.get("name").unwrap(), &String::from("bin")) {
                     error!("Failed to create project: {}", e);
                     state = State::Error(e.to_string());
                 }
@@ -57,10 +57,10 @@ fn main() -> Result<(), Box<dyn Error>> {
                             ProjectType::Cli => {
                                 // Add CLI code template generation logic here
                                 let writer = Writer::new(ProjectType::Cli);
-                                writer.write_main_rs("")?;
-                                writer.write_mod_rs("")?;
-                                writer.write_utils_rs("")?;
-                                writer.write_error_rs("")?;
+                                writer.write_main_rs(&args.get("name").unwrap())?; // TODO: need to correct root path
+                                writer.write_mod_rs(&args.get("name").unwrap())?;
+                                writer.write_utils_rs(&args.get("name").unwrap())?;
+                                writer.write_error_rs(&args.get("name").unwrap())?;
                             }
                             ProjectType::Web => {
                                 // Add web code template generation logic here
@@ -103,7 +103,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 return Err(msg.clone().into());
             }
         }
-        state = state.next(); 
+        state = state.next();
     }
     Ok(())
 }

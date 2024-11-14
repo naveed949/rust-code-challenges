@@ -7,7 +7,7 @@ use std::io::{Error, Result};
 pub struct CliTemplate;
 
 impl CliTemplate {
-    pub fn write_main_rs(&self) -> Result<()> {
+    pub fn write_main_rs(&self, name: &str) -> Result<()> {
         let code = r#"
     mod utils;
     mod error;
@@ -37,20 +37,20 @@ impl CliTemplate {
         utils::greet(name)?;
         Ok(())
     }"#;
-
-    self.generate_rust_code("main.rs", code)
+        let dir = format!("{}/src/main.rs", name);
+    self.generate_rust_code(&dir, code)
     }
 
-    pub fn write_mod_rs(&self) -> std::io::Result<()> {
+    pub fn write_mod_rs(&self, name: &str) -> std::io::Result<()> {
         let code = r#"
         pub mod utils;
         pub mod error;
         "#;
-
-        self.generate_rust_code("src/mod.rs", code)
+        let dir = format!("{}/src/mod.rs", name);
+        self.generate_rust_code(&dir, code)
     }
 
-    pub fn write_utils_rs(&self) -> std::io::Result<()> {
+    pub fn write_utils_rs(&self, name: &str) -> std::io::Result<()> {
         let code = r#"
         use crate::error::CustomError;
         use clap::{App, Arg};
@@ -60,11 +60,11 @@ impl CliTemplate {
             Ok(())
         }
         "#;
-
-        self.generate_rust_code("src/utils.rs", code)
+        let dir = format!("{}/src/utils.rs", name);
+        self.generate_rust_code(&dir, code)
     }
 
-    pub fn write_error_rs(&self) -> std::io::Result<()> {
+    pub fn write_error_rs(&self, name: &str) -> std::io::Result<()> {
         let code = r#"
         use thiserror::Error;
 
@@ -74,8 +74,8 @@ impl CliTemplate {
             AnError,
         }
         "#;
-
-        self.generate_rust_code("src/error.rs", code)
+        let dir = format!("{}/src/error.rs", name);
+        self.generate_rust_code(&dir, code)
     }
 
     fn generate_rust_code(&self, filename: &str, code: &str) -> std::io::Result<()> {

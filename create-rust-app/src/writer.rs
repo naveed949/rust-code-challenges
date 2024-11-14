@@ -20,7 +20,7 @@ impl Write for Writer<ProjectType> {
         match self.project_type {
             ProjectType::Cli => {
                 // Write main.rs for CLI project
-                match CliTemplate.write_main_rs() {
+                match CliTemplate.write_main_rs(data) {
                     Ok(_) => Ok(()),
                     Err(e) => Err(e),
                 }
@@ -40,7 +40,7 @@ impl Write for Writer<ProjectType> {
         match self.project_type {
             ProjectType::Cli => {
                 // Write mod.rs for CLI project
-                match CliTemplate.write_mod_rs() {
+                match CliTemplate.write_mod_rs(data) {
                     Ok(_) => Ok(()),
                     Err(e) => Err(e),
                 }
@@ -60,7 +60,7 @@ impl Write for Writer<ProjectType> {
         match self.project_type {
             ProjectType::Cli => {
                 // Write utils.rs for CLI project
-                match CliTemplate.write_utils_rs() {
+                match CliTemplate.write_utils_rs(data) {
                     Ok(_) => Ok(()),
                     Err(e) => Err(e),
                 }
@@ -80,7 +80,7 @@ impl Write for Writer<ProjectType> {
         match self.project_type {
             ProjectType::Cli => {
                 // Write error.rs for CLI project
-                match CliTemplate.write_error_rs() {
+                match CliTemplate.write_error_rs(data) {
                     Ok(_) => Ok(()),
                     Err(e) => Err(e),
                 }
