@@ -9,6 +9,7 @@ use create_rust_app::{add_dependencies, create_config_files, create_directories,
 use create_rust_app::{
     cli::{Cli, ProjectType},
     state::State,
+    templates::cli_template::CliTemplate,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -51,7 +52,15 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
             State::CodeTemplates => {
                 if let Ok(project_type) = ProjectType::from_str(args.get("project_type").unwrap()) {
-                    let writer = Writer::new(project_type);
+                    let writer= match project_type {
+                        ProjectType::Cli => Box::new(Writer::new(CliTemplate)),
+                        // Add other project types here
+                        _ => {
+                            error!("Invalid project type");
+                            state = State::Error("Invalid project type".to_string());
+                            continue;
+                        }
+                    };
                     if let Err(e) = writer.write_main_rs(&args.get("name").unwrap())
                         .and_then(|_| writer.write_mod_rs(&args.get("name").unwrap()))
                         .and_then(|_| writer.write_utils_rs(&args.get("name").unwrap()))

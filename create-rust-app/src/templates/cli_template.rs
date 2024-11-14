@@ -1,12 +1,14 @@
 use std::fs::File;
-use std::io::Write;
+use std::io::Write as IoWrite;
 use std::path::Path;
 use std::io::{Error, Result};
 
+use crate::templates::write::Write;
+
 pub struct CliTemplate;
 
-impl CliTemplate {
-    pub fn write_main_rs(&self, name: &str) -> Result<()> {
+impl Write for CliTemplate {
+    fn write_main_rs(&self, name: &str) -> Result<()> {
         let code = r#"
         mod utils;
         mod error;
@@ -39,7 +41,7 @@ impl CliTemplate {
         self.generate_rust_code(&format!("{}/src/main.rs", name), code)
     }
 
-    pub fn write_mod_rs(&self, name: &str) -> Result<()> {
+    fn write_mod_rs(&self, name: &str) -> Result<()> {
         let code = r#"
         pub mod utils;
         pub mod error;
@@ -47,7 +49,7 @@ impl CliTemplate {
         self.generate_rust_code(&format!("{}/src/mod.rs", name), code)
     }
 
-    pub fn write_utils_rs(&self, name: &str) -> Result<()> {
+    fn write_utils_rs(&self, name: &str) -> Result<()> {
         let code = r#"
         use crate::error::CustomError;
         use clap::{App, Arg};
@@ -60,7 +62,7 @@ impl CliTemplate {
         self.generate_rust_code(&format!("{}/src/utils.rs", name), code)
     }
 
-    pub fn write_error_rs(&self, name: &str) -> Result<()> {
+    fn write_error_rs(&self, name: &str) -> Result<()> {
         let code = r#"
         use thiserror::Error;
 
@@ -72,7 +74,9 @@ impl CliTemplate {
         "#;
         self.generate_rust_code(&format!("{}/src/error.rs", name), code)
     }
+}
 
+impl CliTemplate {
     fn generate_rust_code(&self, filename: &str, code: &str) -> Result<()> {
         let path = Path::new(filename);
         let mut file = File::create(&path)?;
