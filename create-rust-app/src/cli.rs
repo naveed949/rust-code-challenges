@@ -18,10 +18,11 @@ pub struct Cli {
 
 impl Cli {
     pub fn iter(&self) -> impl Iterator<Item = (&str, &String)> {
-        let mut vec = Vec::new();
-        vec.push(("name", &self.name));
-        vec.push(("project_type", &self.project_type));
-        vec.push(("license", &self.license));
+        let mut vec = vec![
+            ("name", &self.name),
+            ("project_type", &self.project_type),
+            ("license", &self.license),
+        ];
         if let Some(ref include_ci) = self.include_ci {
             vec.push(("include_ci", include_ci));
         }
@@ -68,5 +69,4 @@ impl std::str::FromStr for ProjectType {
             _ => Err(format!("Invalid project type: {}", s)),
         }
     }
-    
 }

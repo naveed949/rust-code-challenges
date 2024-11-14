@@ -19,7 +19,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     loop {
         match state {
             State::Initialization => {
-                if let Err(e) = create_project(&args.get("name").unwrap(), &String::from("bin")) {
+                if let Err(e) = create_project(&args.get("name").unwrap(), "bin") {
                     error!("Failed to create project: {}", e);
                     state = State::Error(e.to_string());
                 }
@@ -50,45 +50,21 @@ fn main() -> Result<(), Box<dyn Error>> {
                 }
             }
             State::CodeTemplates => {
-                // Add code template generation logic here
-                ProjectType::from_str(args.get("project_type").unwrap())
-                    .map(|project_type| -> Result<(), Box<dyn Error>> {
-                        match project_type {
-                            ProjectType::Cli => {
-                                // Add CLI code template generation logic here
-                                let writer = Writer::new(ProjectType::Cli);
-                                writer.write_main_rs(&args.get("name").unwrap())?; // TODO: need to correct root path
-                                writer.write_mod_rs(&args.get("name").unwrap())?;
-                                writer.write_utils_rs(&args.get("name").unwrap())?;
-                                writer.write_error_rs(&args.get("name").unwrap())?;
-                            }
-                            ProjectType::Web => {
-                                // Add web code template generation logic here
-                                let writer = Writer::new(ProjectType::Web);
-                                writer.write_main_rs("")?;
-                                writer.write_mod_rs("")?;
-                                writer.write_utils_rs("")?;
-                                writer.write_error_rs("")?;
-                            }
-                            ProjectType::Desktop => {
-                                // Add desktop code template generation logic here
-                                let writer = Writer::new(ProjectType::Desktop);
-                                writer.write_main_rs("")?;
-                                writer.write_mod_rs("")?;
-                                writer.write_utils_rs("")?;
-                                writer.write_error_rs("")?;
-                            }
-                        }
-                        Ok(())
-                    })
-                    .unwrap_or_else(|e| {
+                if let Ok(project_type) = ProjectType::from_str(args.get("project_type").unwrap()) {
+                    let writer = Writer::new(project_type);
+                    if let Err(e) = writer.write_main_rs(&args.get("name").unwrap())
+                        .and_then(|_| writer.write_mod_rs(&args.get("name").unwrap()))
+                        .and_then(|_| writer.write_utils_rs(&args.get("name").unwrap()))
+                        .and_then(|_| writer.write_error_rs(&args.get("name").unwrap())) {
                         error!("Failed to generate code templates: {}", e);
                         state = State::Error(e.to_string());
-                        Ok(())
-                    })?;
+                    }
+                } else {
+                    error!("Invalid project type");
+                    state = State::Error("Invalid project type".to_string());
+                }
             }
             State::Customization => {
-                // Add customization logic here
                 state = State::Finalization;
             }
             State::Finalization => {
