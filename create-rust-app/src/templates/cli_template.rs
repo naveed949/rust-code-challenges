@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Write as IoWrite;
 use std::path::Path;
-use std::io::{Error, Result};
+use std::io::Result;
 
 use crate::templates::write::Write;
 

@@ -1,11 +1,8 @@
 use create_rust_app::templates::write::{WebWrite, Write};
-use create_rust_app::writer::Writer;
 use log::{error, info};
 use std::error::Error;
 use std::str::FromStr;
 use structopt::StructOpt;
-
-use std::io::Write as _;
 
 use create_rust_app::{add_dependencies, create_config_files, create_directories, create_project};
 use create_rust_app::{
