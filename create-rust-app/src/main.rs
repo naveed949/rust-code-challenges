@@ -1,15 +1,18 @@
-use create_rust_app::templates::write::Write;
+use create_rust_app::templates::write::{WebWrite, Write};
 use create_rust_app::writer::Writer;
 use log::{error, info};
 use std::error::Error;
 use std::str::FromStr;
 use structopt::StructOpt;
 
+use std::io::Write as _;
+
 use create_rust_app::{add_dependencies, create_config_files, create_directories, create_project};
 use create_rust_app::{
     cli::{Cli, ProjectType},
     state::State,
     templates::cli_template::CliTemplate,
+    templates::web_template::WebTemplate,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -23,12 +26,16 @@ fn main() -> Result<(), Box<dyn Error>> {
                 if let Err(e) = create_project(&args.get("name").unwrap(), "bin") {
                     error!("Failed to create project: {}", e);
                     state = State::Error(e.to_string());
+                } else {
+                    state = State::DirectoryStructure;
                 }
             }
             State::DirectoryStructure => {
                 if let Err(e) = create_directories(&args.get("name").unwrap()) {
                     error!("Failed to create directories: {}", e);
                     state = State::Error(e.to_string());
+                } else {
+                    state = State::ConfigurationFiles;
                 }
             }
             State::ConfigurationFiles => {
@@ -38,6 +45,8 @@ fn main() -> Result<(), Box<dyn Error>> {
                 ) {
                     error!("Failed to create configuration files: {}", e);
                     state = State::Error(e.to_string());
+                } else {
+                    state = State::Dependencies;
                 }
             }
             State::Dependencies => {
@@ -48,29 +57,39 @@ fn main() -> Result<(), Box<dyn Error>> {
                 ) {
                     error!("Failed to add dependencies: {}", e);
                     state = State::Error(e.to_string());
+                } else {
+                    state = State::CodeTemplates;
                 }
             }
             State::CodeTemplates => {
-                if let Ok(project_type) = ProjectType::from_str(args.get("project_type").unwrap()) {
-                    let writer= match project_type {
-                        ProjectType::Cli => Box::new(Writer::new(CliTemplate)),
-                        // Add other project types here
-                        _ => {
-                            error!("Invalid project type");
-                            state = State::Error("Invalid project type".to_string());
-                            continue;
+                let project_type = ProjectType::from_str(args.get("project_type").unwrap());
+                match project_type {
+                    Ok(project) => {
+                        match project {
+                            ProjectType::Cli => {
+                                let template = CliTemplate;
+                                template.write_main_rs(&args.get("name").unwrap())?;
+                                template.write_mod_rs(&args.get("name").unwrap())?;
+                                template.write_utils_rs(&args.get("name").unwrap())?;
+                                template.write_error_rs(&args.get("name").unwrap())?;
+                            }
+                            ProjectType::Web => {
+                                let template = WebTemplate;
+                                template.write_main_rs(&args.get("name").unwrap())?;
+                                template.write_mod_rs(&args.get("name").unwrap())?;
+                                template.write_utils_rs(&args.get("name").unwrap())?;
+                                template.write_error_rs(&args.get("name").unwrap())?;
+                                template.write_server_rs(&args.get("name").unwrap())?;
+                                template.write_router_rs(&args.get("name").unwrap())?;
+                                template.write_handlers_rs(&args.get("name").unwrap())?;
+                            }
                         }
-                    };
-                    if let Err(e) = writer.write_main_rs(&args.get("name").unwrap())
-                        .and_then(|_| writer.write_mod_rs(&args.get("name").unwrap()))
-                        .and_then(|_| writer.write_utils_rs(&args.get("name").unwrap()))
-                        .and_then(|_| writer.write_error_rs(&args.get("name").unwrap())) {
-                        error!("Failed to generate code templates: {}", e);
+                    }
+                    Err(e) => {
+                        error!("Failed to parse project type: {}", e);
                         state = State::Error(e.to_string());
                     }
-                } else {
-                    error!("Invalid project type");
-                    state = State::Error("Invalid project type".to_string());
+                    
                 }
             }
             State::Customization => {

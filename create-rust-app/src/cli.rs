@@ -55,7 +55,6 @@ pub fn parse_args() -> Cli {
 pub enum ProjectType {
     Cli,
     Web,
-    Desktop,
 }
 
 impl std::str::FromStr for ProjectType {
@@ -65,7 +64,6 @@ impl std::str::FromStr for ProjectType {
         match s {
             "cli" => Ok(ProjectType::Cli),
             "web" => Ok(ProjectType::Web),
-            "desktop" => Ok(ProjectType::Desktop),
             _ => Err(format!("Invalid project type: {}", s)),
         }
     }
